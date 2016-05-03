@@ -5,6 +5,8 @@ void insercao (int n, int v[]);
 void selecao (int n, int v[]);
 static void intercala1 (int p, int q, int r, int v[]);
 void mergesort (int p, int r, int v[]);
+int separa (int v[], int p, int r);
+void quicksort (int v[], int p, int r);
 
 
 void main()
@@ -79,4 +81,35 @@ void mergesort (int p, int r, int v[])
         mergesort (q, r, v);        // 4
         intercala (p, q, r, v);     // 5
     }
+}
+
+
+int separa (int v[], int p, int r)
+{
+    int c = v[p], i = p+1, j = r, t;         // 1
+    while (1)                                // 2
+    {
+        while (i <= r && v[i] <= c) ++i;      // 3
+        while (c < v[j]) --j;                 // 4
+        if (i >= j) break;                    // 5
+        t = v[i], v[i] = v[j], v[j] = t;      // 6
+        ++i;
+        --j;                             // 7
+    }                                        // 8
+    v[p] = v[j], v[j] = c;                   // 9
+    return j;                                // 10
+}
+
+
+// Esta função rearranja qualquer vetor
+// v[p..r] em ordem crescente.
+
+void quicksort (int v[], int p, int r)
+{
+   int j;                         // 1
+   if (p < r) {                   // 2
+      j = separa (v, p, r);       // 3
+      quicksort (v, p, j-1);      // 4
+      quicksort (v, j+1, r);      // 5
+   }
 }
