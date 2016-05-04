@@ -3,11 +3,12 @@
 
 void insercao (int n, int v[]);
 void selecao (int n, int v[]);
-static void intercala1 (int p, int q, int r, int v[]);
+static void intercala (int p, int q, int r, int v[]);
 void mergesort (int p, int r, int v[]);
 int separa (int v[], int p, int r);
 void quicksort (int v[], int p, int r);
-
+static void constroiHeap (int m, int v[]);
+static void peneira (int m, int v[]);
 
 void main()
 {
@@ -50,10 +51,10 @@ void selecao (int n, int v[])
 // e v[q..r-1] e rearranja v[p..r-1] em ordem
 // crescente.
 
-static void intercala1 (int p, int q, int r, int v[])
+static void intercala (int p, int q, int r, int v[])
 {
     int i, j, k, *w;                        //  1
-    w = mallocc ((r-p) * sizeof (int));     //  2
+    w = malloc ((r-p) * sizeof (int));     //  2
     i = p;
     j = q;                           //  3
     k = 0;                                  //  4
@@ -106,10 +107,51 @@ int separa (int v[], int p, int r)
 
 void quicksort (int v[], int p, int r)
 {
-   int j;                         // 1
-   if (p < r) {                   // 2
-      j = separa (v, p, r);       // 3
-      quicksort (v, p, j-1);      // 4
-      quicksort (v, j+1, r);      // 5
-   }
+    int j;                         // 1
+    if (p < r)                     // 2
+    {
+        j = separa (v, p, r);       // 3
+        quicksort (v, p, j-1);      // 4
+        quicksort (v, j+1, r);      // 5
+    }
+}
+
+
+
+
+// Rearranja um vetor v[1..m] de modo a
+// transformá-lo em heap.
+
+static void constroiHeap (int m, int v[])
+{
+    int k;
+    for (k = 1; k < m; ++k)
+    {
+        // v[1..k] é um heap
+        int f = k+1;
+        while (f > 1 && v[f/2] < v[f])    // 5
+        {
+            troca (v[f/2], v[f]);          // 6
+            f /= 2;                        // 7
+        }
+    }
+}
+
+
+// Recebe um vetor v[1..m] que é um heap
+// exceto talvez pelos índices 2 e 3 e
+// rearranja o vetor de modo a
+// transformá-lo em heap.
+
+static void peneira (int m, int v[])
+{
+    int p = 1, f = 2, t = v[1];
+    while (f <= m)
+    {
+        if (f < m && v[f] < v[f+1])  ++f;
+        if (t >= v[f]) break;
+        v[p] = v[f];
+        p = f, f = 2*p;
+    }
+    v[p] = t;
 }
